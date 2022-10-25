@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Volg deze tutorial voor alle packages: https://pimylifeup.com/raspberry-pi-rfid-rc522/
+
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 
