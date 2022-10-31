@@ -2,6 +2,14 @@
 import cv2
 import numpy as np
 import time
+import paho.mqtt.publish as publish
+
+
+MQTT_SERVER = "192.168.3.196"
+MQTT_PATH = "domoticz/in"
+licensedevice_id = 15
+colordevice_id = 16
+
 license_cascade = cv2.CascadeClassifier('/home/ruben/IoTProject/haarcascade_russian_plate_number.xml')
 timer1 = 99999999999
 timer2 = 99999999999
@@ -35,7 +43,7 @@ while True:
             timer2 = time.time()
         if time.time() > timer2 + 5:
             sensor_recog_array[1] = 0
-            print(sensor_recog_array)
+            
             timer2 = 99999999999
         return img, timer2
   
@@ -65,7 +73,7 @@ while True:
             if area > 10000:
                 sensor_recog_array[0] = 1
                 timer1 = time.time()
-                print(sensor_recog_array)
+                
         if time.time() > timer1 + 2:
             sensor_recog_array[0] = 0
             timer1 = 99999999999
@@ -81,6 +89,11 @@ while True:
     # Display an image in a window
     output, timer1 = colordetection(img, sensor_recog_array, timer1)
     cv2.imshow('color', output)
+    
+    
+    publish.single(MQTT_PATH, '{ "idx" : ' + str(licensedevice_id) + ', "nvalue" : ' + str(sensor_recog_array[1]) + ', "svalue" : "Detected"}' , hostname=MQTT_SERVER)  # send data continuously every 3 seconds
+    publish.single(MQTT_PATH, '{ "idx" : ' + str(colordevice_id) + ', "nvalue" : ' + str(sensor_recog_array[0]) + ', "svalue" : "Detected"}' , hostname=MQTT_SERVER)  # send data continuously every 3 seconds
+    print("printed to mqqt:" + str(sensor_recog_array))
   
     # Wait for Esc key to stop
     k = cv2.waitKey(30) & 0xff
