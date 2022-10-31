@@ -3,7 +3,6 @@ import imutils
 import numpy as np
 import pytesseract
 
-#pytesseract.pytesseract.tesseract_cmd = 'sudo /home/ruben/.local/lib/python3.9/site-packages/pytesseract/pytesseract.py'
 
 
 img = cv2.imread('/home/ruben/Downloads/car3',cv2.IMREAD_COLOR)
